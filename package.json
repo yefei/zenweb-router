@@ -1,6 +1,6 @@
 {
   "name": "@zenweb/router",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Zenweb Router module",
   "type": "module",
   "exports": "./index.js",
