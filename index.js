@@ -1,34 +1,42 @@
-'use strict';
+import path from 'node:path';
+import { default as KoaRouter } from '@koa/router';
+import Debug from 'debug';
+import { globby } from 'globby';
 
-const debug = require('debug')('zenweb:router');
-const path = require('path');
-const Router = require('@koa/router');
-const { discover } = require('@feiye/discover');
+const debug = Debug('zenweb:router');
+
+/**
+ * @param {KoaRouter.RouterOptions} [options]
+ * @returns {KoaRouter}
+ */
+export function Router(options) {
+  return new KoaRouter(options);
+}
 
 /**
  * @param {import('@zenweb/core').Core} core 
  * @param {object} [options]
  * @param {string[]} [options.discoverPaths]
  */
-function setup(core, options) {
+export function setup(core, options) {
   options = Object.assign({
     discoverPaths: [path.join(process.cwd(), 'app', 'controller')],
   }, options);
   debug('options: %o', options);
-  const router = new Router();
+  const router = new KoaRouter();
   Object.defineProperty(core, 'router', { value: router });
-  core.setupAfter(() => {
+  core.setupAfter(async () => {
     if (options.discoverPaths && options.discoverPaths.length) {
-      options.discoverPaths.forEach(path => {
-        const count = discover(path);
-        debug('discover: %s %o files', path, count);
-      });
+      for (const p of options.discoverPaths) {
+        for (const file of await globby('**/*.js', { cwd: p, absolute: true })) {
+          const mod = await import('file://' + file);
+          if (mod.router instanceof KoaRouter) {
+            router.use(mod.router.routes());
+          }
+        }
+      }
     }
-    core.koa.use(router.routes());
-    core.koa.use(router.allowedMethods());
+    core.use(router.routes());
+    core.use(router.allowedMethods());
   });
 }
-
-module.exports = {
-  setup,
-};
