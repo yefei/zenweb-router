@@ -13,8 +13,8 @@ app.start();
 
 app/controller/test.js
 ```js
-import { newRouter } from '@zenweb/router';
-export const router = newRouter();
+import { Router } from '@zenweb/router';
+export const router = Router();
 
 router.get('/', ctx => {
   ctx.body = {
