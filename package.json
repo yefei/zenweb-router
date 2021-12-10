@@ -1,6 +1,6 @@
 {
   "name": "@zenweb/router",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Zenweb Router module",
   "type": "module",
   "exports": "./index.js",
@@ -13,6 +13,7 @@
     "index.d.ts"
   ],
   "scripts": {
+    "dev": "cd example && DEBUG=* node app",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": {
