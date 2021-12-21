@@ -1,4 +1,4 @@
-import { Router } from '@zenweb/router';
+import { Router } from '../../../src/index';
 export const router = new Router();
 
 router.get('/', ctx => {
@@ -6,4 +6,8 @@ router.get('/', ctx => {
     hello: 'world',
     time: Date.now(),
   };
+});
+
+router.get('/err', ctx => {
+  throw new Error('E!!');
 });
