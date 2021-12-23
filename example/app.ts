@@ -1,6 +1,6 @@
 import { Core } from '@zenweb/core';
-import { setup } from '../src/index';
+import router from '../src/index';
 
 const app = new Core();
-app.setup(setup);
+app.setup(router());
 app.start();
